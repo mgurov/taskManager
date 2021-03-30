@@ -13,15 +13,15 @@ public interface ProcessService {
 
 	void addByPriority(TMProcessDto processDto);
 
-	List<TMProcessDto> getAllPrio();
+	List<TMProcessDto> getAllSortedByPrio();
 
-	List<TMProcessDto> getAllById();
+	List<TMProcessDto> getAllSortedById();
 
-	List<TMProcessDto> getAllByCreationTime();
+	List<TMProcessDto> getAllSortedByCreationTime();
 
 	void kill(long pid);
 
 	void killAll();
 
-	void killByPriority(Priority priority);
+	void killWithPriority(Priority priority);
 }

@@ -27,6 +27,7 @@ public class ProcessServiceImpl implements ProcessService {
 		this.appConfig = appConfig;
 	}
 
+	@Override
 	public void addUntilMaxCapacity(final TMProcessDto processDto) {
 		checkExists(processDto);
 		if (processRepository.countRunning() >= appConfig.getMaxCapacity()) {
@@ -35,6 +36,7 @@ public class ProcessServiceImpl implements ProcessService {
 		processRepository.save(Mapper.mapDto(processDto));
 	}
 
+	@Override
 	public void addFIFO(final TMProcessDto processDto) {
 		checkExists(processDto);
 		if (processRepository.countRunning() >= appConfig.getMaxCapacity()) {
@@ -49,6 +51,7 @@ public class ProcessServiceImpl implements ProcessService {
 		processRepository.save(Mapper.mapDto(processDto));
 	}
 
+	@Override
 	public void addByPriority(final TMProcessDto processDto) {
 		checkExists(processDto);
 		if (processRepository.countRunning() >= appConfig.getMaxCapacity()) {
@@ -67,7 +70,8 @@ public class ProcessServiceImpl implements ProcessService {
 		}
 	}
 
-	public List<TMProcessDto> getAllPrio() {
+	@Override
+	public List<TMProcessDto> getAllSortedByPrio() {
 		List<TMProcess> processes = processRepository.findAll();
 		return processes.stream().filter(process -> process.isRunning() == true)
 				.sorted(Comparator.comparing(TMProcess::getPriority)).map(Mapper::map).collect(Collectors.toList());
@@ -75,7 +79,7 @@ public class ProcessServiceImpl implements ProcessService {
 	}
 
 	@Override
-	public List<TMProcessDto> getAllById() {
+	public List<TMProcessDto> getAllSortedById() {
 		List<TMProcess> processes = processRepository.findAll();
 		return processes.stream().filter(process -> process.isRunning() == true)
 				.sorted(Comparator.comparing(TMProcess::getPid)).map(Mapper::map).collect(Collectors.toList());
@@ -83,7 +87,7 @@ public class ProcessServiceImpl implements ProcessService {
 	}
 
 	@Override
-	public List<TMProcessDto> getAllByCreationTime() {
+	public List<TMProcessDto> getAllSortedByCreationTime() {
 		List<TMProcess> processes = processRepository.findAll();
 		return processes.stream().filter(process -> process.isRunning() == true)
 				.sorted(Comparator.comparing(TMProcess::getCreated)).map(Mapper::map).collect(Collectors.toList());
@@ -113,7 +117,7 @@ public class ProcessServiceImpl implements ProcessService {
 	}
 
 	@Override
-	public void killByPriority(Priority priority) {
+	public void killWithPriority(Priority priority) {
 		List<TMProcess> processes = processRepository.findAll();
 		List<TMProcess> priorityProcesses = processes.stream().filter(p -> p.getPriority() == priority)
 				.collect(Collectors.toList());
